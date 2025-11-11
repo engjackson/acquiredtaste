@@ -34,10 +34,13 @@ export default function Home() {
         return;
     }
 
-    // ⭐ TRACK SUCCESS (GA and Mixpanel)
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', 'lead_form_submit', { ... });
-}
+// ⭐ TRACK SUCCESS (GA and Mixpanel)
+ if (typeof window.gtag === 'function') {
+ window.gtag('event', 'lead_form_submit', {
+ 'event_category': 'Engagement',
+ 'event_label': 'Waitlist Signup',
+ 'value': 1 
+ });
 
 if (typeof window.mixpanel !== 'undefined') {
     window.mixpanel.track("Waitlist Signup Success", {
