@@ -2,10 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import Script from 'next/script'; 
 
-export const metadata: Metadata = {
-  title: "Acquired Taste",
-  description: "Discover the world through food. Join the beta waitlist for Acquire Taste.",
-};
+// ... (Metadata and RootLayout function definition remain unchanged)
 
 export default function RootLayout({
   children,
@@ -14,11 +11,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* GA Scripts */}
+      {/* 2. GA Script Loader */}
       <Script 
         strategy="afterInteractive" 
         src="https://www.googletagmanager.com/gtag/js?id=G-BW34P93HJS"
       />
+      
+      {/* 3. GA Config Script */}
       <Script 
         id='google-analytics-config'
         strategy="afterInteractive" 
@@ -32,7 +31,37 @@ export default function RootLayout({
         `}
       </Script>
 
-      {/* MIXPANEL SCRIPT - FIX APPLIED (RegExp constructor used for stability) */}
+      {/* 4. META PIXEL BASE CODE */}
+      <Script
+        id="facebook-pixel-base"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '1290146352879373'); // Your unique Pixel ID
+            fbq('track', 'PageView');
+          `,
+        }}
+      />
+      
+      {/* 4b. META PIXEL NOSCRIPT TAG */}
+      <noscript>
+        <img 
+          height="1" 
+          width="1" 
+          style={{ display: 'none' }} 
+          src="https://www.facebook.com/tr?id=1290146352879373&ev=PageView&noscript=1"
+        />
+      </noscript>
+
+      {/* 5. MIXPANEL SCRIPT */}
       <Script
         id="mixpanel-config"
         strategy="afterInteractive"
@@ -46,14 +75,11 @@ export default function RootLayout({
               autocapture: true,
               record_sessions_percent: 100,
               debug: true,
-              // If you suspect EU residency is the issue after the syntax fix, uncomment this line:
-              // api_host: 'https://api-eu.mixpanel.com', 
             })
           `,
         }}
       />
-
-
+      
       <body className="antialiased">{children}</body>
     </html>
   );
