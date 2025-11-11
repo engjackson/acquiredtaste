@@ -129,7 +129,7 @@ if (typeof window.mixpanel !== 'undefined') {
                     type="submit"
                     className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-xl transition font-medium text-lg flex-shrink-0"
                 >
-                    🚀 Get My Passport
+                    Reserve My Spot
                 </button>
             </motion.form>
             ) : (
@@ -145,7 +145,7 @@ if (typeof window.mixpanel !== 'undefined') {
                 </p>
             </motion.div>
             )}
-            <p className="text-xs text-gray-600 mt-2">No spam. Just an invite to your first culinary quest.</p>
+            <p className="text-xs text-gray-600 mt-2">No spam. Just an exclusive beta invite and occasional feedback requests to help us grow the app.</p>
         </div>
       </section>
 
@@ -233,7 +233,7 @@ if (typeof window.mixpanel !== 'undefined') {
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} // Scroll to top to sign up
             className="mt-6 px-10 py-4 bg-amber-600 hover:bg-amber-700 text-white rounded-xl transition font-bold text-xl shadow-lg hover:shadow-xl"
         >
-            Secure My Spot at the Top (Sign Up!)
+            Get on the waitlist now!
         </button>
       </section>
 
