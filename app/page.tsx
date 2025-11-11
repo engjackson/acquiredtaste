@@ -129,7 +129,7 @@ export default function Home() {
       */}
       <div className="relative w-full max-w-xl mx-auto mb-8">  
     <img 
-        src="/img/hero-palau.png" 
+        src="img/hero-palau.png" 
         alt="Palau Island Food Discovery" 
         // Ensure you set width/height for Next.js <Image> or let <img> handle it
         className="rounded-3xl shadow-2xl border-4 border-amber-300 transform hover:scale-[1.01] transition duration-500"
