@@ -18,10 +18,29 @@ export default function Home() {
       { email, first_name: firstName },
     ]);
 
-    if (error) {
-      console.error("Signup error:", error.message);
-      alert("Something went wrong. Please try again.");
-      return;
+
+   if (error) {
+        console.error("Signup error:", error.message);
+        alert("Your culinary compass lost its signal! Please try again.");
+
+        // ⭐ TRACK SUPABASE (SERVER-SIDE) FAILURE
+        if (typeof window.gtag === 'function') {
+            window.gtag('event', 'form_supabase_fail', {
+                'event_category': 'Error',
+                'event_label': `Supabase Error: ${error.message.substring(0, 50)}`, // Log the error message
+                'value': 0
+            });
+        }
+        return;
+    }
+
+    // ⭐ TRACK SUCCESS (as set up previously)
+    if (typeof window.gtag === 'function') {
+        window.gtag('event', 'lead_form_submit', {
+            'event_category': 'Engagement',
+            'event_label': 'Waitlist Signup',
+            'value': 1
+        });
     }
 
     setSubmitted(true);
@@ -221,3 +240,13 @@ export default function Home() {
     </main>
   );
 }
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BW34P93HJS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BW34P93HJS');
+</script>
