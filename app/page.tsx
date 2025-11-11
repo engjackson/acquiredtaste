@@ -41,6 +41,7 @@ export default function Home() {
  'event_label': 'Waitlist Signup',
  'value': 1 
  });
+} 
 
 if (typeof window.mixpanel !== 'undefined') {
     window.mixpanel.track("Waitlist Signup Success", {
