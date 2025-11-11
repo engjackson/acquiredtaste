@@ -34,14 +34,17 @@ export default function Home() {
         return;
     }
 
-    // ⭐ TRACK SUCCESS (as set up previously)
-    if (typeof window.gtag === 'function') {
-        window.gtag('event', 'lead_form_submit', {
-            'event_category': 'Engagement',
-            'event_label': 'Waitlist Signup',
-            'value': 1
-        });
-    }
+    // ⭐ TRACK SUCCESS (GA and Mixpanel)
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'lead_form_submit', { ... });
+}
+
+if (typeof window.mixpanel !== 'undefined') {
+    window.mixpanel.track("Waitlist Signup Success", {
+        'first_name': firstName,
+        'platform': 'Web'
+    });
+}
 
     setSubmitted(true);
     setEmail("");
