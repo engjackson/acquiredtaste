@@ -4,7 +4,7 @@ const nextConfig = {
   output: 'export', 
   
 
-  basePath: process.env.NODE_ENV === 'production' ? '/engjackson/acquiredtaste' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '/acquiredtaste' : '',
 };
 
 module.exports = nextConfig;
