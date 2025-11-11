@@ -1,0 +1,12 @@
+# Dependencies
+/node_modules
+
+# Next.js build output
+/.next
+
+# Logs
+/npm-debug.log*
+yarn-error.log
+
+# Keep the 'out' folder for GitHub Pages deployment! 
+# DO NOT add /out here!
