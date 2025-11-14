@@ -1,249 +1,285 @@
-"use client";
+'use client';
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle, Globe, BookOpen, Map } from "lucide-react"; 
-import { supabase } from "@/lib/supabaseClient";
+import { CheckCircle, Globe, Goal, Utensils } from "lucide-react";
+// Removed import for database client as it is not available in this environment
+
+// --- COLOR PALETTE DEFINITION ---
+const PRIMARY_COLOR = '#FF7A00'; // Spiced Orange (Buttons, Primary Links)
+const PRIMARY_HOVER_COLOR = '#E56F00'; // Slightly darker orange for hover
+const ACCENT_COLOR = '#007C91'; // Teal Voyage (Secondary accents, sub-headings)
+const BG_COLOR = '#F9F4EC';     // Warm Sand (Page Background)
+const TEXT_COLOR = '#2E2E2E';   // Deep Charcoal (Main Text, H1/H2)
+const WHITE_RING = '#FFFFFF'; // Used for the centered screenshot border
 
 export default function Home() {
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+const [email, setEmail] = useState("");
+const [firstName, setFirstName] = useState("");
+const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !email.includes("@") || !firstName) return;
+const handleSubmit = async (e: React.FormEvent) => {
+ e.preventDefault();
+ if (!email || !email.includes("@") || !firstName) return;
 
-    // Supabase logic
-    const { error } = await supabase.from("signups").insert([
-      { email, first_name: firstName },
-    ]);
+ // MOCK DATA SUBMISSION SUCCESS for static landing page
+ setSubmitted(true);
+ setEmail("");
+ setFirstName("");
+};
 
+return (
+ <main
+  className={`min-h-screen flex flex-col items-center justify-between font-sans pb-20`}
+  style={{ backgroundColor: BG_COLOR, color: TEXT_COLOR }}
+ >
 
-   if (error) {
-        console.error("Signup error:", error.message);
-        alert("Your culinary compass lost its signal! Please try again.");
+ {/* ===================================================================
+  SECTION 1: HERO & SIGN-UP
+  ===================================================================
+ */}
+ <section className="flex flex-col items-center justify-center px-6 pt-20 pb-12 text-center w-full max-w-7xl flex-grow">
+  <motion.div
+   initial={{ opacity: 0, y: -20 }}
+   animate={{ opacity: 1, y: 0 }}
+   transition={{ duration: 0.6 }}
+  >
+  
+   {/* LOGO IMAGE */}
+   <img
+    src="/img/acquiredtasteuni.png"
+    alt="Acquired Taste Logo"
+    className="max-w-xs md:max-w-md mx-auto mb-6 h-auto"
+   />
 
-        // ⭐ TRACK SUPABASE (SERVER-SIDE) FAILURE
-        if (typeof window.gtag === 'function') {
-            window.gtag('event', 'form_supabase_fail', {
-                'event_category': 'Error',
-                'event_label': `Supabase Error: ${error.message.substring(0, 50)}`, // Log the error message
-                'value': 0
-            });
-        }
-        return;
-    }
+   {/* App Name - H1 */}
+   <h1
+    className={`text-4xl md:text-6xl font-black leading-tight mb-4 tracking-widest uppercase`}
+    style={{ color: TEXT_COLOR }}
+   >
+    ACQUIRED TASTE
+   </h1>
+  
+   {/* Tagline - H2 */}
+   <h2
+    className="text-3xl font-bold mb-2"
+    style={{ color: TEXT_COLOR }}
+   >
+    Taste the World.
+    <span style={{ color: PRIMARY_COLOR }}> Learn the Culture. </span>
+    <span style={{ color: ACCENT_COLOR }}>Collect the Memory.</span>
+   </h2>
+  
+   {/* Sub-Headline */}
+   <p className={`mt-4 text-xl max-w-4xl mx-auto`} style={{ color: TEXT_COLOR }}>
+    The <strong>Gamified Cultural Passport</strong> that transforms every dish into a global discovery, a personal story, and a powerful memory.
+   </p>
+  
+   {/* Explanatory Paragraph */}
+   <p
+    className={`mt-6 max-w-3xl mx-auto text-lg border-t border-b py-4 px-4`}
+    style={{ color: TEXT_COLOR, borderColor: PRIMARY_COLOR + '30' }}
+   >
+    Acquired Taste is your new best friend for food adventure! We're here to help you get culturally fluent, one delicious bite at a time. Find out about upcoming global holidays and traditions, and discover the awesome dishes served to celebrate them. Food is the universal party starter! Break out of your comfort zone, try new cuisines, and turn every single meal into a fun, rewarding, educational quest.
+   </p>
+      {/* Waitlist Count / Social Proof */}
+   <p
+    className="mt-8 text-sm font-semibold uppercase tracking-widest"
+    style={{ color: PRIMARY_COLOR }}
+   >
+    Are you a foodie ready to explore the world?
+   </p>
+  </motion.div>
 
-// ⭐ TRACK SUCCESS (GA and Mixpanel)
- if (typeof window.gtag === 'function') {
- window.gtag('event', 'lead_form_submit', {
- 'event_category': 'Engagement',
- 'event_label': 'Waitlist Signup',
- 'value': 1 
- });
-} 
-
-if (typeof window.mixpanel !== 'undefined') {
-    window.mixpanel.track("Waitlist Signup Success", {
-        'first_name': firstName,
-        'platform': 'Web'
-    });
-}
-
-    setSubmitted(true);
-    setEmail("");
-    setFirstName("");
-  };
-
-  return (
-    <main className="min-h-screen flex flex-col items-center justify-between bg-gradient-to-b from-orange-50 to-amber-100 text-gray-900">
-      
-      {/* ===================================================================
-        SECTION 1: HERO & SIGN-UP
-        ===================================================================
-      */}
-      <section className="flex flex-col items-center justify-center px-6 pt-20 pb-16 text-center w-full max-w-7xl flex-grow"> 
-    {/* Hype & Branding */}
-    <motion.div 
-        initial={{ opacity: 0, y: -20 }} 
-        animate={{ opacity: 1, y: 0 }} 
-        transition={{ duration: 0.6 }}
-
-    > 
-        
-        {/* App Name - H1: Large, Extrabold, Distinct Color to stand out */}
-        <h1 className="text-6xl md:text-8xl font-black text-amber-900 leading-tight mb-4 tracking-widest uppercase"> 
-            ACQUIRED TASTE 
-        </h1> 
-        
-        {/* Tagline - H2: Smaller font size to support the H1 */}
-        <h2 className="text-3xl font-bold text-amber-800 mb-2"> 
-            Taste the World.  
-            <span className="text-amber-600"> Learn the Culture. </span> 
-            <span className="text-amber-800">Collect the Memory.</span> 
-        </h2> 
-        
-        {/* Sub-Headline (The Gamified Cultural Passport...) */}
-        <p className="mt-4 text-xl max-w-4xl text-gray-700 mx-auto"> 
-            The <strong>Gamified Cultural Passport</strong> that transforms every dish into a global discovery, a personal story, and a powerful memory. 
-        </p> 
-        
-        {/* Explanatory Paragraph */}
-        <p className="mt-6 max-w-3xl mx-auto text-lg text-gray-800 border-t border-b border-amber-200 py-4 px-4"> 
-            Acquired Taste is your new best friend for food adventure! We're here to help you get culturally fluent, one delicious bite at a time. Find out about upcoming global holidays and traditions, and discover the awesome dishes served to celebrate them. Food is the universal party starter! Break out of your comfort zone, try new cuisines, and turn every single meal into a fun, rewarding, educational quest. 
-        </p>
-            {/* Waitlist Count / Social Proof */}
-            <p className="mt-8 text-sm font-semibold text-amber-700 uppercase tracking-widest">
-                Are you a foodie ready to explore the world?
-            </p>
-        </motion.div>
-
-        {/* Form Area - The max-w-md and mx-auto ensure it's centered and aligned */}
-        <div className="mt-8 w-full max-w-xl">
-            {!submitted ? (
-            <motion.form
-                onSubmit={handleSubmit}
-                // FIX: Added mx-auto here to ensure form is perfectly centered
-                className="flex flex-col sm:flex-row gap-3 w-full max-w-md mx-auto"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
-            >
-                <input
-                    type="text"
-                    placeholder="First name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-gray-800"
-                    required
-                />
-                <input
-                    type="email"
-                    placeholder="Email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-gray-800"
-                    required
-                />
-                <button
-                    type="submit"
-                    className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-xl transition font-medium text-lg flex-shrink-0"
-                >
-                    Reserve My Spot
-                </button>
-            </motion.form>
-            ) : (
-            <motion.div
-                className="flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-xl w-full max-w-md mx-auto"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-            >
-                <CheckCircle className="w-10 h-10 mb-2 text-green-600" />
-                <p className="font-medium text-lg">
-                    You're on the list! We’ll be in touch soon 🍽️
-                </p>
-            </motion.div>
-            )}
-            <p className="text-xs text-gray-600 mt-2">No spam. Just an exclusive beta invite and occasional feedback requests to help us grow the app.</p>
-        </div>
-      </section>
-
-      {/* ===================================================================
-        SECTION 2: CORE VALUE PROPOSITION (The Benefits)
-        ===================================================================
-      */}
-      <div className="relative w-full max-w-xl mx-auto mb-8">  
-    <img 
-        src="img/hero-palau.png" 
-        alt="Palau Island Food Discovery" 
-        // Ensure you set width/height for Next.js <Image> or let <img> handle it
-        className="rounded-3xl shadow-2xl border-4 border-amber-300 transform hover:scale-[1.01] transition duration-500"
+  {/* Form Area */}
+  <div className="mt-8 w-full max-w-xl">
+   {!submitted ? (
+   <motion.form
+    onSubmit={handleSubmit}
+    className="flex flex-col sm:flex-row gap-3 w-full max-w-md mx-auto"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ delay: 0.4, duration: 0.5 }}
+   >
+    <input
+     type="text"
+     placeholder="First name"
+     value={firstName}
+     onChange={(e) => setFirstName(e.target.value)}
+     className={`flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[${PRIMARY_COLOR}] text-gray-800`}
+     required
     />
-</div><section className="w-full py-20 bg-white shadow-inner">
-          <div className="max-w-6xl mx-auto px-6">
-              <h2 className="text-4xl font-bold text-center text-amber-900 mb-12">
-    <span className="text-amber-600">T</span>he <span className="text-amber-600">A</span>dventure, <span className="text-amber-600">S</span>tory, <span className="text-amber-600">T</span>radition, &amp; <span className="text-amber-600">E</span>xperience
-</h2>
-              <div className="grid md:grid-cols-3 gap-10">
-                  
-                  {/* Card 1: Discovery */}
-                  <motion.div
-                      className="p-8 bg-amber-50 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4 border-amber-600"
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.2 }}
-                      transition={{ duration: 0.5, delay: 0.3 }}
-                  >
-                      <Map className="w-10 h-10 text-amber-600 mb-3" />
-                      <h3 className="text-2xl font-semibold text-gray-800">Your Cultural Guide to Global Flavor</h3>
-                      <p className="mt-2 text-gray-600">
-                          Explore beyond your normal diet and find your next craving. Learn the Story with global holidays, food traditions, and insights that will drive your culinary adventure. Check out our rotating Cultural Carousels for inspiration!
-                      </p>
-                  </motion.div>
+    <input
+     type="email"
+     placeholder="Email address"
+     value={email}
+     onChange={(e) => setEmail(e.target.value)}
+     className={`flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[${PRIMARY_COLOR}] text-gray-800`}
+     required
+    />
+    <button
+     type="submit"
+     className="px-6 py-3 text-white rounded-xl transition font-medium text-lg flex-shrink-0"
+     style={{ backgroundColor: PRIMARY_COLOR }}
+     onMouseOver={(e) => e.currentTarget.style.backgroundColor = PRIMARY_HOVER_COLOR}
+     onMouseOut={(e) => e.currentTarget.style.backgroundColor = PRIMARY_COLOR}
+    >
+     Reserve My Spot
+    </button>
+   </motion.form>
+   ) : (
+   <motion.div
+    className="flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-xl w-full max-w-md mx-auto"
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.5 }}
+   >
+    <CheckCircle className="w-10 h-10 mb-2 text-green-600" />
+    <p className={`font-medium text-lg`} style={{ color: TEXT_COLOR }}>
+     You're on the list! We’ll be in touch soon 🍽️
+    </p>
+   </motion.div>
+   )}
+   <p className="text-xs text-gray-600 mt-2">No spam. Just an exclusive beta invite and occasional feedback requests to help us grow the app.</p>
+  </div>
+ </section>
 
-                  {/* Card 2: Gamification */}
-                  <motion.div
-                      className="p-8 bg-amber-50 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4 border-amber-600"
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.2 }}
-                      transition={{ duration: 0.5, delay: 0.1 }}
-                  >
-                      <Globe className="w-10 h-10 text-amber-600 mb-3" />
-                      <h3 className="text-2xl font-semibold text-gray-800">Stamp Your Digital Passport</h3>
-                      <p className="mt-2 text-gray-600">
-                          Explore the world's cuisines in the most fun way possible. Every dish you taste and log earns you a country stamp, turning your exploration into a rewarding game of learning, discovery, and culinary achievement.
-                      </p>
-                  </motion.div>
+ {/* ===================================================================
+  APP SCREENSHOT GALLERY (ADJUSTED SPACING)
+  ===================================================================
+ */}
+ <div className="relative w-full max-w-6xl mx-auto my-12 hidden md:grid grid-cols-3 gap-4 px-6 items-end">
+  {/* Screenshot 1: Dashboard (Left) */}
+  <motion.img
+   src="/img/screenshot-dashboard.png"
+   alt="Acquired Taste Dashboard showing home dashboard"
+   // FIX: Added negative left margin (-ml-4) and reduced gap to increase visual overlap
+   className="w-full h-auto rounded-3xl shadow-2xl transform rotate-[-5deg] translate-y-4 -ml-4 hover:rotate-[-3deg] transition duration-500"
+   style={{ borderColor: PRIMARY_COLOR, borderWidth: '4px' }}
+   initial={{ opacity: 0, x: -50 }}
+   whileInView={{ opacity: 1, x: 0 }}
+   viewport={{ once: true }}
+   transition={{ duration: 0.8, delay: 0.1 }}
+  />
+  {/* Screenshot 2: Swipe/Explore (Center/Hero) */}
+  <motion.img
+   src="/img/screenshot-explore.png"
+   alt="Acquired Taste Explore Swipe card for new dishes"
+   className="w-full h-auto rounded-3xl shadow-2xl transform scale-[1.15] -translate-y-20 z-20 hover:scale-[1.20] transition duration-500"
+   style={{ borderColor: WHITE_RING, borderWidth: '8px', outline: `4px solid ${ACCENT_COLOR}` }}
+   initial={{ opacity: 0, y: 50 }}
+   whileInView={{ opacity: 1, y: 0 }}
+   viewport={{ once: true }}
+   transition={{ duration: 0.8, delay: 0.2 }}
+  />
+  {/* Screenshot 3: Feasts/Holidays (Right) */}
+  <motion.img
+   src="/img/screenshot-passport.png"
+   alt="Acquired Taste Cultural Feasts list"
+   // FIX: Added negative right margin (-mr-4) and reduced gap to increase visual overlap
+   className="w-full h-auto rounded-3xl shadow-2xl transform rotate-[5deg] translate-y-4 -mr-4 hover:rotate-[3deg] transition duration-500"
+   style={{ borderColor: ACCENT_COLOR, borderWidth: '4px' }}
+   initial={{ opacity: 0, x: 50 }}
+   whileInView={{ opacity: 1, y: 0 }}
+   viewport={{ once: true }}
+   transition={{ duration: 0.8, delay: 0.3 }}
+  />
+ </div>
+ 
+ {/* ===================================================================
+  SECTION 2: CORE VALUE PROPOSITION (The Benefits)
+  ===================================================================
+ */}
+ <section
+  className="w-full py-20 shadow-inner"
+  style={{ backgroundColor: '#ffffff' }}
+ >
+  <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+   <h2 className="text-4xl font-bold text-center mb-12 md:col-span-3" style={{ color: TEXT_COLOR }}>
+    The Adventure, Story, Tradition, & Experience
+   </h2>
+   
+    {/* Card 1: Gamification (Passport/Stamps) */}
+    <motion.div
+     className="p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4"
+     style={{ backgroundColor: BG_COLOR, borderColor: PRIMARY_COLOR }}
+     initial={{ opacity: 0, y: 30 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true, amount: 0.2 }}
+     transition={{ duration: 0.5, delay: 0.1 }}
+    >
+     <Globe className="w-10 h-10 mb-3" style={{ color: PRIMARY_COLOR }} />
+     <h3 className="text-2xl font-semibold" style={{ color: TEXT_COLOR }}>Stamp Your Digital Passport</h3>
+     <p className="mt-2 text-gray-600">
+      Every dish you log earns you a country stamp, turning your culinary exploration into a rewarding game of discovery and achievement. Track your world journey, one meal at a time.
+     </p>
+    </motion.div>
 
-                  {/* Card 3: Journaling */}
-                  <motion.div
-                      className="p-8 bg-amber-50 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4 border-amber-600"
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.2 }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
-                  >
-                      <BookOpen className="w-10 h-10 text-amber-600 mb-3" />
-                      <h3 className="text-2xl font-semibold text-gray-800">Log Memories, Not Macros.</h3>
-                      <p className="mt-2 text-gray-600">
-                          Forget calorie tracking. Acquired Taste is a journal built for cultural context and emotional reflection. Capture the story, feel the moment, and experience the world, one meaningful meal at a time.
-                      </p>
-                  </motion.div>
+    {/* Card 2: Quests (Goal) */}
+    <motion.div
+     className="p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4"
+     style={{ backgroundColor: BG_COLOR, borderColor: ACCENT_COLOR }}
+     initial={{ opacity: 0, y: 30 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true, amount: 0.2 }}
+     transition={{ duration: 0.5, delay: 0.2 }}
+    >
+     <Goal className="w-10 h-10 mb-3" style={{ color: ACCENT_COLOR }} />
+     <h3 className="text-2xl font-semibold" style={{ color: TEXT_COLOR }}>Conquer Monthly Quests and Badges</h3>
+     <p className="mt-2 text-gray-600">
+      Break out of your comfort zone with fun monthly challenges like the **Taste of the Mediterranean**. Complete the quest goals and earn exclusive Bronze, Silver, and Gold badges.
+     </p>
+    </motion.div>
 
-                  
+    {/* Card 3: Discovery (Cultural Feasts) */}
+    <motion.div
+     className="p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4"
+     style={{ backgroundColor: BG_COLOR, borderColor: PRIMARY_COLOR }}
+     initial={{ opacity: 0, y: 30 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true, amount: 0.2 }}
+     transition={{ duration: 0.5, delay: 0.3 }}
+    >
+     <Utensils className="w-10 h-10 mb-3" style={{ color: PRIMARY_COLOR }} />
+     <h3 className="text-2xl font-semibold" style={{ color: TEXT_COLOR }}>A Guide to Cultural Feasts</h3>
+     <p className="mt-2 text-gray-600">
+      Explore global holidays and festivals with our cultural guide. Learn the story, significance, and traditional dishes of events like Day of the Dead and Hanukkah to inspire your next meal.
+     </p>
+    </motion.div>
+   </div>
+ </section>
 
-              </div>
-          </div>
-      </section>
+ {/* ===================================================================
+  SECTION 3: CLOSING CTA (Repeated Sign-up)
+  ===================================================================
+ */}
+ <section className="w-full py-16 px-6 text-center">
+  <h2 className="text-3xl font-bold" style={{ color: TEXT_COLOR }}>
+   The World is Waiting. Are You Ready to Taste It?
+  </h2>
+  <p className="mt-3 text-lg max-w-3xl mx-auto text-gray-700">
+   Don't let another amazing meal fade away. Join the movement of cultural explorers who document their journey.
+  </p>
+  <button
+   onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} // Scroll to top to sign up
+   className="mt-6 px-10 py-4 text-white rounded-xl transition font-bold text-xl shadow-lg hover:shadow-xl"
+   style={{ backgroundColor: PRIMARY_COLOR }}
+   onMouseOver={(e) => e.currentTarget.style.backgroundColor = PRIMARY_HOVER_COLOR}
+   onMouseOut={(e) => e.currentTarget.style.backgroundColor = PRIMARY_COLOR}
+  >
+   Get on the waitlist now!
+  </button>
+ </section>
 
-      {/* ===================================================================
-        SECTION 3: CLOSING CTA (Repeated Sign-up)
-        ===================================================================
-      */}
-      <section className="w-full py-16 px-6 text-center">
-        <h2 className="text-3xl font-bold text-amber-900">
-            The World is Waiting. Are You Ready to Taste It?
-        </h2>
-        <p className="mt-3 text-lg max-w-3xl mx-auto text-gray-700">
-            Don't let another amazing meal fade away. Join the movement of cultural explorers who document their journey.
-        </p>
-         <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} // Scroll to top to sign up
-            className="mt-6 px-10 py-4 bg-amber-600 hover:bg-amber-700 text-white rounded-xl transition font-bold text-xl shadow-lg hover:shadow-xl"
-        >
-            Get on the waitlist now!
-        </button>
-      </section>
+ {/* Footer (Placeholder) */}
+ <footer
+  className="w-full py-8 text-gray-200"
+  style={{ backgroundColor: TEXT_COLOR }}
+ >
+  <div className="max-w-6xl mx-auto px-6 text-center text-sm">
+   <p>&copy; {new Date().getFullYear()} Acquired Taste. Connecting the world through food.</p>
+  </div>
+ </footer>
 
-      {/* Footer (Placeholder) */}
-      <footer className="w-full py-8 bg-amber-900 text-gray-200">
-          <div className="max-w-6xl mx-auto px-6 text-center text-sm">
-              <p>&copy; {new Date().getFullYear()} Acquired Taste. Connecting the world through food.</p>
-          </div>
-      </footer>
-
-    </main>
-  );
+ </main>
+);
 }
