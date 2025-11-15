@@ -62,7 +62,7 @@ return (
   
    {/* LOGO IMAGE */}
    <img
-    src="/img/acquireduni.png"
+    src="/img/acquiredtasteuni.png"
     alt="Acquired  Logo"
     className="max-w-xs md:max-w-md mx-auto mb-6 h-auto"
    />
@@ -72,7 +72,7 @@ return (
     className={`text-4xl md:text-6xl font-black leading-tight mb-4 tracking-widest uppercase`}
     style={{ color: TEXT_COLOR }}
    >
-    ACQUIRED 
+    ACQUIRED Taste
    </h1>
   
    {/* Tagline - H2 */}
@@ -80,7 +80,7 @@ return (
     className="text-3xl font-bold mb-2"
     style={{ color: TEXT_COLOR }}
    >
-     the World.
+     Taste the World.
     <span style={{ color: PRIMARY_COLOR }}> Learn the Culture. </span>
     <span style={{ color: ACCENT_COLOR }}>Collect the Memory.</span>
    </h2>
@@ -95,7 +95,7 @@ return (
     className={`mt-6 max-w-3xl mx-auto text-lg border-t border-b py-4 px-4`}
     style={{ color: TEXT_COLOR, borderColor: PRIMARY_COLOR + '30' }}
    >
-    Acquired  is your new best friend for your food adventure! Log your entire food journey, whether you're cooking a meal at home or dining out. We're here to help you get culturally fluent, one delicious bite at a time. Find out about upcoming global holidays and traditions, and discover the awesome dishes served to celebrate them. Food is the universal party starter! Break out of your comfort zone, try new cuisines, and turn every single meal into a fun, rewarding, educational quest. In the long run, the app will use your preferred s, ingredients, and dining history to recommend new food adventures you're guaranteed to love.
+    Acquired Taste is your new best friend for your food adventure! Log your entire food journey, whether you're cooking a meal at home or dining out. We're here to help you get culturally fluent, one delicious bite at a time. Find out about upcoming global holidays and traditions, and discover the awesome dishes served to celebrate them. Food is the universal party starter! Break out of your comfort zone, try new cuisines, and turn every single meal into a fun, rewarding, educational quest. In the long run, the app will use your preferred tastes, ingredients, and dining history to recommend new food adventures you've have yet to experience.
    </p>
       {/* Waitlist Count / Social Proof */}
    <p
@@ -174,7 +174,7 @@ return (
     {/* Mobile Screenshot 1: Dashboard */}
     <motion.img
      src="/img/screenshot-dashboard.png"
-     alt="Acquired  Dashboard showing home dashboard"
+     alt="Acquired Taste Dashboard showing home dashboard"
      className="w-64 h-auto rounded-3xl shadow-xl border-4"
      style={{ borderColor: ACCENT_COLOR }}
      initial={{ opacity: 0, y: 30 }}
@@ -186,7 +186,7 @@ return (
     {/* Mobile Screenshot 2: Swipe/Explore (Center/Hero) */}
     <motion.img
      src="/img/screenshot-explore.png"
-     alt="Acquired  Explore Swipe card for new dishes"
+     alt="Acquired Taste Explore Swipe card for new dishes"
      className="w-64 h-auto rounded-3xl shadow-xl border-4"
      style={{ borderColor: WHITE_RING, outline: `4px solid ${PRIMARY_COLOR}` }}
      initial={{ opacity: 0, y: 30 }}
@@ -198,7 +198,7 @@ return (
     {/* Mobile Screenshot 3: Feasts/Holidays (Passport) */}
     <motion.img
      src="/img/screenshot-passport.png"
-     alt="Acquired  Cultural Feasts list"
+     alt="Acquired Taste Cultural Feasts list"
      className="w-64 h-auto rounded-3xl shadow-xl border-4"
      style={{ borderColor: ACCENT_COLOR }}
      initial={{ opacity: 0, y: 30 }}
@@ -217,7 +217,7 @@ return (
     
     <motion.img
      src="/img/screenshot-dashboard.png"
-     alt="Acquired  Dashboard showing home dashboard"
+     alt="Acquired Taste Dashboard showing home dashboard"
      // Simple sizing and transition effect
      className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
      style={{ borderColor: ACCENT_COLOR, borderWidth: '4px' }}
@@ -229,7 +229,7 @@ return (
     
     <motion.img
      src="/img/screenshot-explore.png"
-     alt="Acquired  Explore Swipe card for new dishes"
+     alt="Acquired Taste Explore Swipe card for new dishes"
      // Simple sizing and transition effect, border to highlight focus
      className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
      style={{ borderColor: WHITE_RING, borderWidth: '8px', outline: `4px solid ${PRIMARY_COLOR}` }}
@@ -241,7 +241,7 @@ return (
     
     <motion.img
      src="/img/screenshot-passport.png"
-     alt="Acquired  Cultural Feasts list"
+     alt="Acquired Taste Cultural Feasts list"
      // Simple sizing and transition effect
      className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
      style={{ borderColor: ACCENT_COLOR, borderWidth: '4px' }}
@@ -292,7 +292,7 @@ return (
      <Goal className="w-10 h-10 mb-3" style={{ color: ACCENT_COLOR }} />
      <h3 className="text-2xl font-semibold" style={{ color: TEXT_COLOR }}>Conquer Monthly Quests and Badges</h3>
      <p className="mt-2 text-gray-600">
-      Break out of your comfort zone with fun monthly challenges like the *experience a noodle from any country in Asia*. Complete the quest goals and earn exclusive Bronze, Silver, and Gold badges.
+      Break out of your comfort zone with fun monthly challenges like experience a noodle from any country in Asia" or "Bake any type of bread from scratch at home." Complete the quest goals and earn exclusive monthly Bronze, Silver, and Gold badges.
      </p>
     </motion.div>
 
@@ -342,14 +342,14 @@ return (
   style={{ backgroundColor: TEXT_COLOR }}
  >
   <div className="max-w-6xl mx-auto px-6 text-center text-sm space-y-2">
-   <p>&copy; {new Date().getFullYear()} Acquired . Connecting the world through food.</p>
+   <p>&copy; {new Date().getFullYear()} Acquired Taste. Connecting the world through food.</p>
    <p>
-    Questions or feedback? Email us:
+    Questions or feedback? Email us: 
     <a
      href="mailto:acquired.app@gmail.com"
      className="text-white underline hover:text-red-300 transition"
     >
-     acquired.app@gmail.com
+     acquiredtaste.app@gmail.com
     </a>
    </p>
   </div>
