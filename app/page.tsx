@@ -80,7 +80,7 @@ return (
     className={`mt-6 max-w-3xl mx-auto text-lg border-t border-b py-4 px-4`}
     style={{ color: TEXT_COLOR, borderColor: PRIMARY_COLOR + '30' }}
    >
-    Acquired Taste is your new best friend for food adventure! We're here to help you get culturally fluent, one delicious bite at a time. Find out about upcoming global holidays and traditions, and discover the awesome dishes served to celebrate them. Food is the universal party starter! Break out of your comfort zone, try new cuisines, and turn every single meal into a fun, rewarding, educational quest.
+    Acquired Taste is your new best friend for your food adventure! Log your entire food journey, whether you're cooking a meal at home or dining out. We're here to help you get culturally fluent, one delicious bite at a time. Find out about upcoming global holidays and traditions, and discover the awesome dishes served to celebrate them. Food is the universal party starter! Break out of your comfort zone, try new cuisines, and turn every single meal into a fun, rewarding, educational quest. In the long run, the app will use your preferred tastes, ingredients, and dining history to recommend new food adventures you're guaranteed to love.
    </p>
       {/* Waitlist Count / Social Proof */}
    <p
@@ -160,7 +160,7 @@ return (
     <motion.img
      src="/img/screenshot-dashboard.png"
      alt="Acquired Taste Dashboard showing home dashboard"
-     className="w-56 h-auto rounded-3xl shadow-xl border-4"
+     className="w-64 h-auto rounded-3xl shadow-xl border-4"
      style={{ borderColor: ACCENT_COLOR }}
      initial={{ opacity: 0, y: 30 }}
      whileInView={{ opacity: 1, y: 0 }}
@@ -172,7 +172,7 @@ return (
     <motion.img
      src="/img/screenshot-explore.png"
      alt="Acquired Taste Explore Swipe card for new dishes"
-     className="w-56 h-auto rounded-3xl shadow-xl border-4"
+     className="w-64 h-auto rounded-3xl shadow-xl border-4"
      style={{ borderColor: WHITE_RING, outline: `4px solid ${PRIMARY_COLOR}` }}
      initial={{ opacity: 0, y: 30 }}
      whileInView={{ opacity: 1, y: 0 }}
@@ -184,7 +184,7 @@ return (
     <motion.img
      src="/img/screenshot-passport.png"
      alt="Acquired Taste Cultural Feasts list"
-     className="w-56 h-auto rounded-3xl shadow-xl border-4"
+     className="w-64 h-auto rounded-3xl shadow-xl border-4"
      style={{ borderColor: ACCENT_COLOR }}
      initial={{ opacity: 0, y: 30 }}
      whileInView={{ opacity: 1, y: 0 }}
