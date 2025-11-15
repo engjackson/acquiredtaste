@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, Globe, Goal, Utensils } from "lucide-react";
-// Removed import for database client as it is not available in this environment
+
 
 // --- COLOR PALETTE DEFINITION ---
 const PRIMARY_COLOR = '#FF7A00'; // Spiced Orange (Buttons, Primary Links)
@@ -11,6 +11,7 @@ const ACCENT_COLOR = '#007C91'; // Teal Voyage (Secondary accents, sub-headings)
 const BG_COLOR = '#F9F4EC';     // Warm Sand (Page Background)
 const TEXT_COLOR = '#2E2E2E';   // Deep Charcoal (Main Text, H1/H2)
 const WHITE_RING = '#FFFFFF'; // Used for the centered screenshot border
+
 
 export default function Home() {
 const [email, setEmail] = useState("");
@@ -21,7 +22,7 @@ const handleSubmit = async (e: React.FormEvent) => {
  e.preventDefault();
  if (!email || !email.includes("@") || !firstName) return;
 
- // MOCK DATA SUBMISSION SUCCESS for static landing page
+
  setSubmitted(true);
  setEmail("");
  setFirstName("");
@@ -144,45 +145,97 @@ return (
  </section>
 
  {/* ===================================================================
-  APP SCREENSHOT GALLERY (ADJUSTED SPACING)
+  APP SCREENSHOT GALLERY (RESPONSIVE)
   ===================================================================
  */}
- <div className="relative w-full max-w-6xl mx-auto my-12 hidden md:grid grid-cols-3 gap-4 px-6 items-end">
-  {/* Screenshot 1: Dashboard (Left) */}
-  <motion.img
-   src="/img/screenshot-dashboard.png"
-   alt="Acquired Taste Dashboard showing home dashboard"
-   // FIX: Added negative left margin (-ml-4) and reduced gap to increase visual overlap
-   className="w-full h-auto rounded-3xl shadow-2xl transform rotate-[-5deg] translate-y-4 -ml-4 hover:rotate-[-3deg] transition duration-500"
-   style={{ borderColor: PRIMARY_COLOR, borderWidth: '4px' }}
-   initial={{ opacity: 0, x: -50 }}
-   whileInView={{ opacity: 1, x: 0 }}
-   viewport={{ once: true }}
-   transition={{ duration: 0.8, delay: 0.1 }}
-  />
-  {/* Screenshot 2: Swipe/Explore (Center/Hero) */}
-  <motion.img
-   src="/img/screenshot-explore.png"
-   alt="Acquired Taste Explore Swipe card for new dishes"
-   className="w-full h-auto rounded-3xl shadow-2xl transform scale-[1.15] -translate-y-20 z-20 hover:scale-[1.20] transition duration-500"
-   style={{ borderColor: WHITE_RING, borderWidth: '8px', outline: `4px solid ${ACCENT_COLOR}` }}
-   initial={{ opacity: 0, y: 50 }}
-   whileInView={{ opacity: 1, y: 0 }}
-   viewport={{ once: true }}
-   transition={{ duration: 0.8, delay: 0.2 }}
-  />
-  {/* Screenshot 3: Feasts/Holidays (Right) */}
-  <motion.img
-   src="/img/screenshot-passport.png"
-   alt="Acquired Taste Cultural Feasts list"
-   // FIX: Added negative right margin (-mr-4) and reduced gap to increase visual overlap
-   className="w-full h-auto rounded-3xl shadow-2xl transform rotate-[5deg] translate-y-4 -mr-4 hover:rotate-[3deg] transition duration-500"
-   style={{ borderColor: ACCENT_COLOR, borderWidth: '4px' }}
-   initial={{ opacity: 0, x: 50 }}
-   whileInView={{ opacity: 1, y: 0 }}
-   viewport={{ once: true }}
-   transition={{ duration: 0.8, delay: 0.3 }}
-  />
+ <div className="w-full max-w-6xl mx-auto my-12 px-6">
+  
+   {/* -----------------------------------------------------------------
+   MOBILE SCREENSHOT GALLERY (Vertical Stack)
+   Visible on mobile (< md), hidden on desktop (>= md)
+   ----------------------------------------------------------------- */}
+   <div className="flex flex-col items-center space-y-6 pt-12 md:hidden">
+   
+    {/* Mobile Screenshot 1: Dashboard */}
+    <motion.img
+     src="/img/screenshot-dashboard.png"
+     alt="Acquired Taste Dashboard showing home dashboard"
+     className="w-56 h-auto rounded-3xl shadow-xl border-4"
+     style={{ borderColor: ACCENT_COLOR }}
+     initial={{ opacity: 0, y: 30 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true }}
+     transition={{ duration: 0.5, delay: 0.1 }}
+    />
+   
+    {/* Mobile Screenshot 2: Swipe/Explore (Center/Hero) */}
+    <motion.img
+     src="/img/screenshot-explore.png"
+     alt="Acquired Taste Explore Swipe card for new dishes"
+     className="w-56 h-auto rounded-3xl shadow-xl border-4"
+     style={{ borderColor: WHITE_RING, outline: `4px solid ${PRIMARY_COLOR}` }}
+     initial={{ opacity: 0, y: 30 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true }}
+     transition={{ duration: 0.5, delay: 0.2 }}
+    />
+   
+    {/* Mobile Screenshot 3: Feasts/Holidays (Passport) */}
+    <motion.img
+     src="/img/screenshot-passport.png"
+     alt="Acquired Taste Cultural Feasts list"
+     className="w-56 h-auto rounded-3xl shadow-xl border-4"
+     style={{ borderColor: ACCENT_COLOR }}
+     initial={{ opacity: 0, y: 30 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true }}
+     transition={{ duration: 0.5, delay: 0.3 }}
+    />
+   </div>
+
+
+   {/* -----------------------------------------------------------------
+   DESKTOP SCREENSHOT GALLERY 
+   ----------------------------------------------------------------- */}
+   <div className="hidden md:flex justify-center items-center py-12 space-x-8">
+   
+    
+    <motion.img
+     src="/img/screenshot-dashboard.png"
+     alt="Acquired Taste Dashboard showing home dashboard"
+     // Simple sizing and transition effect
+     className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
+     style={{ borderColor: ACCENT_COLOR, borderWidth: '4px' }}
+     initial={{ opacity: 0, y: 30 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true }}
+     transition={{ duration: 0.5, delay: 0.1 }}
+    />
+    
+    <motion.img
+     src="/img/screenshot-explore.png"
+     alt="Acquired Taste Explore Swipe card for new dishes"
+     // Simple sizing and transition effect, border to highlight focus
+     className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
+     style={{ borderColor: WHITE_RING, borderWidth: '8px', outline: `4px solid ${PRIMARY_COLOR}` }}
+     initial={{ opacity: 0, y: 30 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true }}
+     transition={{ duration: 0.5, delay: 0.2 }}
+    />
+    
+    <motion.img
+     src="/img/screenshot-passport.png"
+     alt="Acquired Taste Cultural Feasts list"
+     // Simple sizing and transition effect
+     className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
+     style={{ borderColor: ACCENT_COLOR, borderWidth: '4px' }}
+     initial={{ opacity: 0, y: 30 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true }}
+     transition={{ duration: 0.5, delay: 0.3 }}
+    />
+   </div>
  </div>
  
  {/* ===================================================================
@@ -195,10 +248,9 @@ return (
  >
   <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
    <h2 className="text-4xl font-bold text-center mb-12 md:col-span-3" style={{ color: TEXT_COLOR }}>
-    The Adventure, Story, Tradition, & Experience
+    <strong>T</strong>he <strong>A</strong>dventure, <strong>S</strong>tory, <strong>T</strong>radition, & <strong>E</strong>xperience
    </h2>
    
-    {/* Card 1: Gamification (Passport/Stamps) */}
     <motion.div
      className="p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4"
      style={{ backgroundColor: BG_COLOR, borderColor: PRIMARY_COLOR }}
@@ -214,7 +266,6 @@ return (
      </p>
     </motion.div>
 
-    {/* Card 2: Quests (Goal) */}
     <motion.div
      className="p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4"
      style={{ backgroundColor: BG_COLOR, borderColor: ACCENT_COLOR }}
@@ -249,7 +300,7 @@ return (
  </section>
 
  {/* ===================================================================
-  SECTION 3: CLOSING CTA (Repeated Sign-up)
+  SECTION 3: CLOSING CTA
   ===================================================================
  */}
  <section className="w-full py-16 px-6 text-center">
