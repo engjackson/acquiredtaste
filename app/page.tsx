@@ -1,8 +1,8 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Added useEffect here
 import { motion } from "framer-motion";
 import { CheckCircle, Globe, Goal, Utensils } from "lucide-react";
-
+// Removed import for database client as it is not available in this environment
 
 // --- COLOR PALETTE DEFINITION ---
 const PRIMARY_COLOR = '#FF7A00'; // Spiced Orange (Buttons, Primary Links)
@@ -12,11 +12,26 @@ const BG_COLOR = '#F9F4EC';     // Warm Sand (Page Background)
 const TEXT_COLOR = '#2E2E2E';   // Deep Charcoal (Main Text, H1/H2)
 const WHITE_RING = '#FFFFFF'; // Used for the centered screenshot border
 
-
 export default function Home() {
 const [email, setEmail] = useState("");
 const [firstName, setFirstName] = useState("");
 const [submitted, setSubmitted] = useState(false);
+
+// --- SEO and Title Management ---
+useEffect(() => {
+ // Set Page Title
+ document.title = "Acquired Taste | The Cultural Food Passport App";
+
+ // Set SEO Meta Description
+ const description = "Acquired Taste: The Gamified Cultural Food Passport. Log meals (cooked or dining out), discover global holidays, and get taste-based recommendations to explore new cuisines and earn badges.";
+ let meta = document.querySelector('meta[name="description"]');
+ if (!meta) {
+  meta = document.createElement('meta');
+  meta.name = 'description';
+  document.head.appendChild(meta);
+ }
+ (meta as HTMLMetaElement).content = description;
+}, []);
 
 const handleSubmit = async (e: React.FormEvent) => {
  e.preventDefault();
@@ -262,7 +277,7 @@ return (
      <Globe className="w-10 h-10 mb-3" style={{ color: PRIMARY_COLOR }} />
      <h3 className="text-2xl font-semibold" style={{ color: TEXT_COLOR }}>Stamp Your Digital Passport</h3>
      <p className="mt-2 text-gray-600">
-      Every dish you log earns you a country stamp, turning your culinary exploration into a rewarding game of discovery and achievement. Track your world journey, one meal at a time.
+      Every dish you log earns you a country stamp, turning your food journey into a rewarding game of discovery and achievement. Track your world journey, one meal at a time.
      </p>
     </motion.div>
 
