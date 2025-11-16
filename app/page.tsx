@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { CheckCircle, Globe, Goal, Utensils } from "lucide-react";
 
 // --- CDN Loading Strategy for Supabase ---
-// We define a window global type definition for type safety inside this self-contained file.
 declare global {
   interface Window {
     supabase?: any;
@@ -12,21 +11,18 @@ declare global {
 }
 
 // --- Supabase Client Initialization Hook ---
-// This hook ensures the library is loaded via CDN script tag before the app attempts to use it.
 const useSupabaseClient = (url: string, anonKey: string) => {
   const [supabaseClient, setSupabaseClient] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if the script is already loaded
     if (window.supabase) {
       setSupabaseClient(window.supabase.createClient(url, anonKey));
       setLoading(false);
       return;
     }
 
-    // Load the Supabase library via CDN script tag
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.2/dist/umd/supabase.min.js';
     script.async = true;
@@ -51,22 +47,23 @@ const useSupabaseClient = (url: string, anonKey: string) => {
     document.head.appendChild(script);
 
     return () => {
-      // Cleanup: remove the script tag if the component unmounts
-      document.head.removeChild(script);
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
     };
-  }, [url, anonKey]); // Re-run if URL or Key changes (though static here)
+  }, [url, anonKey]);
 
   return { supabaseClient, loading, error };
 };
 
 
 // --- COLOR PALETTE DEFINITION ---
-const PRIMARY_COLOR = '#FF7A00'; // Spiced Orange (Buttons, Primary Links)
-const PRIMARY_HOVER_COLOR = '#E56F00'; // Slightly darker orange for hover
-const ACCENT_COLOR = '#007C91'; // Teal Voyage (Secondary accents, sub-headings)
-const BG_COLOR = '#F9F4EC';     // Warm Sand (Page Background)
-const TEXT_COLOR = '#2E2E2E';   // Deep Charcoal (Main Text, H1/H2)
-const WHITE_RING = '#FFFFFF'; // Used for the centered screenshot border
+const PRIMARY_COLOR = '#FF7A00'; 
+const PRIMARY_HOVER_COLOR = '#E56F00'; 
+const ACCENT_COLOR = '#007C91'; 
+const BG_COLOR = '#F9F4EC';     
+const TEXT_COLOR = '#2E2E2E';   
+const WHITE_RING = '#FFFFFF'; 
 
 // --- SUPABASE CONFIGURATION ---
 const supabaseUrl = 'https://yiccjijuhnyjmfihawcc.supabase.co';
@@ -75,89 +72,85 @@ const WAITLIST_TABLE_NAME = 'signups';
 
 
 export default function Home() {
-const [email, setEmail] = useState("");
-const [firstName, setFirstName] = useState("");
-const [submitted, setSubmitted] = useState(false);
-const [submissionError, setSubmissionError] = useState(''); // State for errors
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [submissionError, setSubmissionError] = useState('');
 
-  // Use the custom hook to manage Supabase client state
   const { supabaseClient, loading: isLoadingSupabase, error: supabaseLoadError } = useSupabaseClient(
     supabaseUrl,
     supabaseAnonKey
   );
   
-  // Set submission error if the library fails to load
   useEffect(() => {
     if (supabaseLoadError) {
       setSubmissionError(supabaseLoadError);
     }
   }, [supabaseLoadError]);
 
-
-// --- SEO and Title Management ---
-useEffect(() => {
- document.title = "Acquired Taste | The Cultural Food Passport App";
- const description = "Acquired Taste: The Gamified Cultural Food Passport. Log meals (cooked or dining out), discover global holidays, and get taste-based recommendations to explore new cuisines and earn badges.";
- 
- let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
- 
- if (!meta) {
-  meta = document.createElement('meta') as HTMLMetaElement;
-  meta.name = 'description'; 
-  document.head.appendChild(meta);
- }
- meta.content = description;
-}, []);
-
-
-// --- SUBMISSION HANDLER (Saves data to Supabase) ---
-// This function has been fully restored with the Supabase insertion logic.
-const handleSubmit = useCallback(async (e: React.FormEvent) => {
- e.preventDefault();
- setSubmissionError(''); // Clear previous errors
-
- if (!email || !email.includes("@") || !firstName) return;
- 
- if (isLoadingSupabase || !supabaseClient) {
-  setSubmissionError("Supabase is still connecting or failed to load. Please try again in a moment.");
-  return;
- }
-
- try {
-  // Attempt to insert data into the 'signups' table
-  const { error } = await supabaseClient
-   .from(WAITLIST_TABLE_NAME)
-   .insert([
-    {
-     first_name: firstName, // Must match your database column name exactly
-     email: email,         // Must match your database column name exactly
+  // --- SEO and Title Management ---
+  useEffect(() => {
+    document.title = "Acquired Taste | The Cultural Food Passport App";
+    const description = "Acquired Taste: The Gamified Cultural Food Passport. Log meals (cooked or dining out), discover global holidays, and get taste-based recommendations to explore new cuisines and earn badges.";
+    
+    let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+    
+    if (!meta) {
+      meta = document.createElement('meta') as HTMLMetaElement;
+      meta.name = 'description'; 
+      document.head.appendChild(meta);
     }
-   ]);
+    meta.content = description;
+  }, []);
 
-  if (error) {
-         // --- CRITICAL DEBUGGING LINE ---
-         console.error("Supabase Error Object:", error);
-         // -------------------------------
-   throw new Error(error.message);
-  }
+  // --- SUBMISSION HANDLER (Saves data to Supabase) ---
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmissionError('');
 
-  // Success state update
-  setSubmitted(true);
-  setEmail("");
-  setFirstName("");
+    if (!email || !email.includes("@") || !firstName) return;
+    
+    if (isLoadingSupabase || !supabaseClient) {
+      setSubmissionError("Supabase is still connecting or failed to load. Please wait a moment.");
+      return;
+    }
+    
+    const fieldsToInsert = {
+      first_name: firstName, 
+      email: email,         
+    };
+    
+    console.log("Attempting to insert:", fieldsToInsert);
 
- } catch (error: any) {
-  console.error("Error adding document to Supabase:", error);
-  setSubmissionError(`There was an error saving your spot: ${error.message || 'Unknown error'}.`);
- }
-}, [firstName, email, isLoadingSupabase, supabaseClient]);
+    try {
+      const { data, error } = await supabaseClient
+        .from(WAITLIST_TABLE_NAME)
+        .insert([fieldsToInsert]);
+
+      if (error) {
+        // Log the error object for server-side debugging
+        console.error("Supabase API Insertion Error:", error);
+        throw new Error(error.message);
+      }
+
+      // Success state update
+      setSubmitted(true);
+      setEmail("");
+      setFirstName("");
+
+    } catch (error: any) {
+      console.error("Client Error during Supabase call:", error);
+      // This is the error the user sees in the UI
+      setSubmissionError(`Submission failed. This is often caused by security (RLS) rules. Error: ${error.message || 'Unknown error'}.`);
+    }
+  }, [firstName, email, isLoadingSupabase, supabaseClient]);
 
 
-return (
- <main
-  className={`min-h-screen flex flex-col items-center justify-between font-sans pb-20`}
-  style={{ backgroundColor: BG_COLOR, color: TEXT_COLOR }}
- >
+  return (
+    <main 
+      className={`min-h-screen flex flex-col items-center justify-between font-sans pb-20`}
+      style={{ backgroundColor: BG_COLOR, color: TEXT_COLOR }}
+    >
 
  {/* ===================================================================
   SECTION 1: HERO & SIGN-UP
@@ -170,10 +163,10 @@ return (
    transition={{ duration: 0.6 }}
   >
   
-   {/* LOGO IMAGE - Using a placeholder since local paths often fail */}
+   {/* LOGO IMAGE */}
    <img
-    src="https://placehold.co/250x100/FF7A00/FFFFFF?text=Acquired+Taste+Logo"
-    alt="Acquired Taste Logo"
+    src="/img/acquiredtasteuni.png"
+    alt="Acquired  Logo"
     className="max-w-xs md:max-w-md mx-auto mb-6 h-auto"
    />
 
@@ -182,7 +175,7 @@ return (
     className={`text-4xl md:text-6xl font-black leading-tight mb-4 tracking-widest uppercase`}
     style={{ color: TEXT_COLOR }}
    >
-    ACQUIRED TASTE
+    ACQUIRED Taste
    </h1>
   
    {/* Tagline - H2 */}
@@ -190,7 +183,7 @@ return (
     className="text-3xl font-bold mb-2"
     style={{ color: TEXT_COLOR }}
    >
-    Taste the World.
+     Taste the World.
     <span style={{ color: PRIMARY_COLOR }}> Learn the Culture. </span>
     <span style={{ color: ACCENT_COLOR }}>Collect the Memory.</span>
    </h2>
@@ -205,7 +198,7 @@ return (
     className={`mt-6 max-w-3xl mx-auto text-lg border-t border-b py-4 px-4`}
     style={{ color: TEXT_COLOR, borderColor: PRIMARY_COLOR + '30' }}
    >
-    <span className="font-bold" style={{ color: PRIMARY_COLOR }}>Acquired Taste</span> is your new best friend for food adventure! Log your entire food journey, whether you're **cooking a meal at home** or **dining out**. We're here to help you get culturally fluent, one delicious bite at a time. Find out about upcoming global holidays and traditions, and discover the awesome dishes served to celebrate them. Food is the universal party starter! Break out of your comfort zone, try new cuisines, and turn every single meal into a fun, rewarding, educational quest. In the long run, the app will use your preferred tastes, ingredients, and dining history to **recommend new food adventures** you're guaranteed to love.
+    Acquired Taste is your new best friend for your food adventure! Log your entire food journey, whether you're cooking a meal at home or dining out. We're here to help you get culturally fluent, one delicious bite at a time. Find out about upcoming global holidays and traditions, and discover the awesome dishes served to celebrate them. Food is the universal party starter! Break out of your comfort zone, try new cuisines, and turn every single meal into a fun, rewarding, educational quest. In the long run, the app will use your preferred tastes, ingredients, and dining history to recommend new food adventures you've have yet to experience.
    </p>
       {/* Waitlist Count / Social Proof */}
    <p
@@ -216,68 +209,69 @@ return (
    </p>
   </motion.div>
 
-  {/* Form Area */}
-  <div className="mt-8 w-full max-w-xl">
-   {!submitted ? (
-    <>
-    {submissionError && (
-     <p className="mb-4 text-sm font-medium text-red-600 p-2 bg-red-100 rounded-lg">
-      Error: {submissionError}
-     </p>
-    )}
-    <motion.form
-     onSubmit={handleSubmit}
-     className="flex flex-col sm:flex-row gap-3 w-full max-w-md mx-auto"
-     initial={{ opacity: 0 }}
-     animate={{ opacity: 1 }}
-     transition={{ delay: 0.4, duration: 0.5 }}
-    >
-     <input
-      type="text"
-      placeholder="First name"
-      value={firstName}
-      onChange={(e) => setFirstName(e.target.value)}
-      className={`flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-opacity-50 text-gray-800`}
-      style={{ outlineColor: PRIMARY_COLOR, outlineOffset: '2px' }}
-      required
-     />
-     <input
-      type="email"
-      placeholder="Email address"
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      className={`flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-opacity-50 text-gray-800`}
-      style={{ outlineColor: PRIMARY_COLOR, outlineOffset: '2px' }}
-      required
-     />
-     <button
-      type="submit"
-      className="px-6 py-3 text-white rounded-xl transition font-medium text-lg flex-shrink-0"
-      style={{ backgroundColor: PRIMARY_COLOR }}
-      onMouseOver={(e) => e.currentTarget.style.backgroundColor = PRIMARY_HOVER_COLOR}
-      onMouseOut={(e) => e.currentTarget.style.backgroundColor = PRIMARY_COLOR}
-      disabled={isLoadingSupabase || !!supabaseLoadError}
-     >
-      {isLoadingSupabase ? "Connecting..." : "Reserve My Spot"}
-     </button>
-    </motion.form>
-    </>
-   ) : (
-   <motion.div
-    className="flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-xl w-full max-w-md mx-auto"
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.5 }}
-   >
-    <CheckCircle className="w-10 h-10 mb-2 text-green-600" />
-    <p className={`font-medium text-lg`} style={{ color: TEXT_COLOR }}>
-     You're on the list! We’ll be in touch soon 🍽️
-    </p>
-   </motion.div>
-   )}
-   <p className="text-xs text-gray-600 mt-2">No spam. Just an exclusive beta invite and occasional feedback requests to help us grow the app.</p>
-  </div>
- </section>
+   {/* Form Area */}
+        <div className="mt-8 w-full max-w-xl">
+          {!submitted ? (
+            <>
+              {/* Submission Error Display */}
+              {submissionError && (
+                <p className="mb-4 text-sm font-medium text-red-600 p-3 bg-red-100 rounded-xl border border-red-300 shadow-md">
+                  **Error:** {submissionError}
+                </p>
+              )}
+              <motion.form
+                onSubmit={handleSubmit}
+                className="flex flex-col sm:flex-row gap-3 w-full max-w-md mx-auto"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+              >
+                <input
+                  type="text"
+                  placeholder="First name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className={`flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-opacity-50 text-gray-800`}
+                  style={{ outlineColor: PRIMARY_COLOR, outlineOffset: '2px' }}
+                  required
+                />
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={`flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-opacity-50 text-gray-800`}
+                  style={{ outlineColor: PRIMARY_COLOR, outlineOffset: '2px' }}
+                  required
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-3 text-white rounded-xl transition font-medium text-lg flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ backgroundColor: PRIMARY_COLOR }}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = PRIMARY_HOVER_COLOR}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = PRIMARY_COLOR}
+                  disabled={isLoadingSupabase || !!supabaseLoadError}
+                >
+                  {isLoadingSupabase ? "Connecting..." : "Reserve My Spot"}
+                </button>
+              </motion.form>
+            </>
+          ) : (
+          <motion.div
+            className="flex flex-col items-center justify-center p-8 bg-white/50 backdrop-blur-sm rounded-xl w-full max-w-md mx-auto"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <CheckCircle className="w-10 h-10 mb-2 text-green-600" />
+            <p className={`font-medium text-lg`} style={{ color: TEXT_COLOR }}>
+              You're on the list! We’ll be in touch soon 🍽️
+            </p>
+          </motion.div>
+          )}
+          <p className="text-xs text-gray-600 mt-2">No spam. Just an exclusive beta invite and occasional feedback requests to help us grow the app.</p>
+        </div>
+      </section>
 
  {/* ===================================================================
   APP SCREENSHOT GALLERY (RESPONSIVE)
@@ -287,15 +281,16 @@ return (
   
    {/* -----------------------------------------------------------------
    MOBILE SCREENSHOT GALLERY (Vertical Stack)
+   Visible on mobile (< md), hidden on desktop (>= md)
    ----------------------------------------------------------------- */}
    <div className="flex flex-col items-center space-y-6 pt-12 md:hidden">
    
     {/* Mobile Screenshot 1: Dashboard */}
     <motion.img
-     src="https://placehold.co/224x480/FF7A00/FFFFFF?text=Dashboard"
+     src="/img/screenshot-dashboard.png"
      alt="Acquired Taste Dashboard showing home dashboard"
-     className="w-56 h-auto rounded-3xl shadow-xl border-4"
-     style={{ borderColor: PRIMARY_COLOR }}
+     className="w-64 h-auto rounded-3xl shadow-xl border-4"
+     style={{ borderColor: ACCENT_COLOR }}
      initial={{ opacity: 0, y: 30 }}
      whileInView={{ opacity: 1, y: 0 }}
      viewport={{ once: true }}
@@ -304,10 +299,10 @@ return (
    
     {/* Mobile Screenshot 2: Swipe/Explore (Center/Hero) */}
     <motion.img
-     src="https://placehold.co/256x480/007C91/FFFFFF?text=Explore+Swipe"
+     src="/img/screenshot-explore.png"
      alt="Acquired Taste Explore Swipe card for new dishes"
-     className="w-64 h-auto rounded-3xl shadow-2xl border-8"
-     style={{ borderColor: WHITE_RING, outline: `4px solid ${ACCENT_COLOR}` }}
+     className="w-64 h-auto rounded-3xl shadow-xl border-4"
+     style={{ borderColor: WHITE_RING, outline: `4px solid ${PRIMARY_COLOR}` }}
      initial={{ opacity: 0, y: 30 }}
      whileInView={{ opacity: 1, y: 0 }}
      viewport={{ once: true }}
@@ -316,9 +311,9 @@ return (
    
     {/* Mobile Screenshot 3: Feasts/Holidays (Passport) */}
     <motion.img
-     src="https://placehold.co/224x480/FF7A00/FFFFFF?text=Passport+Feasts"
+     src="/img/screenshot-passport.png"
      alt="Acquired Taste Cultural Feasts list"
-     className="w-56 h-auto rounded-3xl shadow-xl border-4"
+     className="w-64 h-auto rounded-3xl shadow-xl border-4"
      style={{ borderColor: ACCENT_COLOR }}
      initial={{ opacity: 0, y: 30 }}
      whileInView={{ opacity: 1, y: 0 }}
@@ -329,47 +324,45 @@ return (
 
 
    {/* -----------------------------------------------------------------
-   DESKTOP SCREENSHOT GALLERY (Simple Side-by-Side Flex - ALL EQUAL SIZE)
+   DESKTOP SCREENSHOT GALLERY 
    ----------------------------------------------------------------- */}
    <div className="hidden md:flex justify-center items-center py-12 space-x-8">
    
-    {/* Screenshot 1: Dashboard (Left) */}
+    
     <motion.img
-     src="https://placehold.co/256x480/FF7A00/FFFFFF?text=Dashboard"
+     src="/img/screenshot-dashboard.png"
      alt="Acquired Taste Dashboard showing home dashboard"
-     // Set to w-64
-     className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
-     style={{ borderColor: PRIMARY_COLOR, borderWidth: '4px' }}
-     initial={{ opacity: 0, y: 30 }}
-     whileInView={{ opacity: 1, y: 0 }}
-     viewport={{ once: true }}
-     transition={{ duration: 0.5, delay: 0.5 }}
-    />
-    
-    {/* Screenshot 2: Swipe/Explore (Center/Hero) - Also set to w-64 */}
-    <motion.img
-     src="https://placehold.co/256x480/007C91/FFFFFF?text=Explore+Swipe"
-     alt="Acquired Taste Explore Swipe card for new dishes"
-     // Set to w-64
-     className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
-     style={{ borderColor: WHITE_RING, borderWidth: '8px', outline: `4px solid ${ACCENT_COLOR}` }}
-     initial={{ opacity: 0, y: 30 }}
-     whileInView={{ opacity: 1, y: 0 }}
-     viewport={{ once: true }}
-     transition={{ duration: 0.5, delay: 0.6 }}
-    />
-    
-    {/* Screenshot 3: Feasts/Holidays (Right) */}
-    <motion.img
-     src="https://placehold.co/256x480/FF7A00/FFFFFF?text=Passport+Feasts"
-     alt="Acquired Taste Cultural Feasts list"
-     // Set to w-64
+     // Simple sizing and transition effect
      className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
      style={{ borderColor: ACCENT_COLOR, borderWidth: '4px' }}
      initial={{ opacity: 0, y: 30 }}
      whileInView={{ opacity: 1, y: 0 }}
      viewport={{ once: true }}
-     transition={{ duration: 0.5, delay: 0.7 }}
+     transition={{ duration: 0.5, delay: 0.1 }}
+    />
+    
+    <motion.img
+     src="/img/screenshot-explore.png"
+     alt="Acquired Taste Explore Swipe card for new dishes"
+     // Simple sizing and transition effect, border to highlight focus
+     className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
+     style={{ borderColor: WHITE_RING, borderWidth: '8px', outline: `4px solid ${PRIMARY_COLOR}` }}
+     initial={{ opacity: 0, y: 30 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true }}
+     transition={{ duration: 0.5, delay: 0.2 }}
+    />
+    
+    <motion.img
+     src="/img/screenshot-passport.png"
+     alt="Acquired Taste Cultural Feasts list"
+     // Simple sizing and transition effect
+     className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
+     style={{ borderColor: ACCENT_COLOR, borderWidth: '4px' }}
+     initial={{ opacity: 0, y: 30 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true }}
+     transition={{ duration: 0.5, delay: 0.3 }}
     />
    </div>
  </div>
@@ -384,10 +377,9 @@ return (
  >
   <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
    <h2 className="text-4xl font-bold text-center mb-12 md:col-span-3" style={{ color: TEXT_COLOR }}>
-    The Adventure, Story, Tradition, & Experience
+    <strong>T</strong>he <strong>A</strong>dventure, <strong>S</strong>tory, <strong>T</strong>radition, & <strong>E</strong>xperience
    </h2>
    
-    {/* Card 1: Gamification (Passport/Stamps) */}
     <motion.div
      className="p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4"
      style={{ backgroundColor: BG_COLOR, borderColor: PRIMARY_COLOR }}
@@ -399,11 +391,10 @@ return (
      <Globe className="w-10 h-10 mb-3" style={{ color: PRIMARY_COLOR }} />
      <h3 className="text-2xl font-semibold" style={{ color: TEXT_COLOR }}>Stamp Your Digital Passport</h3>
      <p className="mt-2 text-gray-600">
-      Every dish you log earns you a country stamp, turning your culinary exploration into a rewarding game of discovery and achievement. Track your world journey, one meal at a time.
+      Every dish you log earns you a country stamp, turning your food journey into a rewarding game of discovery and achievement. Track your world journey, one meal at a time.
      </p>
     </motion.div>
 
-    {/* Card 2: Quests (Goal) */}
     <motion.div
      className="p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4"
      style={{ backgroundColor: BG_COLOR, borderColor: ACCENT_COLOR }}
@@ -415,7 +406,7 @@ return (
      <Goal className="w-10 h-10 mb-3" style={{ color: ACCENT_COLOR }} />
      <h3 className="text-2xl font-semibold" style={{ color: TEXT_COLOR }}>Conquer Monthly Quests and Badges</h3>
      <p className="mt-2 text-gray-600">
-      Break out of your comfort zone with fun monthly challenges like the **Taste of the Mediterranean**. Complete the quest goals and earn exclusive Bronze, Silver, and Gold badges.
+      Break out of your comfort zone with fun monthly challenges like experience a noodle from any country in Asia" or "Bake any type of bread from scratch at home." Complete the quest goals and earn exclusive monthly Bronze, Silver, and Gold badges.
      </p>
     </motion.div>
 
@@ -438,12 +429,12 @@ return (
  </section>
 
  {/* ===================================================================
-  SECTION 3: CLOSING CTA (Repeated Sign-up)
+  SECTION 3: CLOSING CTA
   ===================================================================
  */}
  <section className="w-full py-16 px-6 text-center">
   <h2 className="text-3xl font-bold" style={{ color: TEXT_COLOR }}>
-   The World is Waiting. Are You Ready to Taste It?
+   The World is Waiting. Are You Ready to  It?
   </h2>
   <p className="mt-3 text-lg max-w-3xl mx-auto text-gray-700">
    Don't let another amazing meal fade away. Join the movement of cultural explorers who document their journey.
@@ -467,9 +458,9 @@ return (
   <div className="max-w-6xl mx-auto px-6 text-center text-sm space-y-2">
    <p>&copy; {new Date().getFullYear()} Acquired Taste. Connecting the world through food.</p>
    <p>
-    Questions or feedback? Email us:
+    Questions or feedback? Email us: 
     <a
-     href="mailto:acquiredtaste.app@gmail.com"
+     href="mailto:acquired.app@gmail.com"
      className="text-white underline hover:text-red-300 transition"
     >
      acquiredtaste.app@gmail.com
