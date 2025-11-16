@@ -3,15 +3,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, Globe, Goal, Utensils } from "lucide-react";
 
-// --- CDN Loading Strategy for Supabase ---
-declare global {
-  interface Window {
-    supabase?: any;
-    mixpanel?: any;
-    gtag?: (...args: any[]) => void;
-    fbq?: (...args: any[]) => void;
-  }
-}
+// The global type declarations (for window.supabase, window.mixpanel, etc.) 
+// are managed externally (e.g., in a types/global.d.ts file) to avoid the build error.
 
 // --- Supabase Client Initialization Hook ---
 const useSupabaseClient = (url: string, anonKey: string) => {
@@ -66,6 +59,7 @@ const trackEvent = (eventName: string, properties: Record<string, any>) => {
   console.log(`[Analytics] Tracking event: ${eventName}`, properties);
 
   // 1. Mixpanel Tracking (Identify and Track)
+  // window.mixpanel is safe to access because it's declared globally in another file.
   if (typeof window.mixpanel !== 'undefined' && typeof window.mixpanel.track === 'function') {
     // Identify the user and set properties
     window.mixpanel.identify(properties.email);
@@ -192,16 +186,22 @@ export default function App() {
       if (error) {
         // Log the error object for server-side debugging
         console.error("Supabase API Insertion Error:", error);
-        throw new Error(error.message);
+        // Specifically check for duplicate email error (usually HTTP 409 or RLS denial)
+        const errorMessage = error.message.includes('duplicate key value') ? 
+                             "You're already on the waitlist! Thanks for your interest." : 
+                             error.message;
+        throw new Error(errorMessage);
       }
 
-      // 1. SUCCESS: Fire analytics *before* clearing state
+      // --- ANALYTICS FIX ---
+      // This is the correct placement: Fires only after successful database insert.
       trackEvent('Waitlist_Signup_Success', submissionData);
 
-      // 2. SUCCESS: Update state
+      // Success state update
       setSubmitted(true);
       setEmail("");
       setFirstName("");
+      // --- END ANALYTICS FIX ---
 
     } catch (error: any) {
       console.error("Client Error during Supabase call:", error);
@@ -227,7 +227,7 @@ export default function App() {
         transition={{ duration: 0.6 }}
       >
       
-        {/* LOGO IMAGE (Updated to use asset ID) */}
+        {/* LOGO IMAGE */}
         <img
           src={ASSET_IDS.logo}
           alt="Acquired Taste Logo"
@@ -348,7 +348,7 @@ export default function App() {
       ----------------------------------------------------------------- */}
       <div className="flex flex-col items-center space-y-6 pt-12 md:hidden">
       
-        {/* Mobile Screenshot 1: Dashboard (Updated to use asset ID) */}
+        {/* Mobile Screenshot 1: Dashboard */}
         <motion.img
           src={ASSET_IDS.screenshotDashboard}
           alt="Acquired Taste Dashboard showing home dashboard"
@@ -360,7 +360,7 @@ export default function App() {
           transition={{ duration: 0.5, delay: 0.1 }}
         />
         
-        {/* Mobile Screenshot 2: Swipe/Explore (Center/Hero) (Updated to use asset ID) */}
+        {/* Mobile Screenshot 2: Swipe/Explore (Center/Hero) */}
         <motion.img
           src={ASSET_IDS.screenshotExplore}
           alt="Acquired Taste Explore Swipe card for new dishes"
@@ -372,7 +372,7 @@ export default function App() {
           transition={{ duration: 0.5, delay: 0.2 }}
         />
         
-        {/* Mobile Screenshot 3: Feasts/Holidays (Passport) (Updated to use asset ID) */}
+        {/* Mobile Screenshot 3: Feasts/Holidays (Passport) */}
         <motion.img
           src={ASSET_IDS.screenshotPassport}
           alt="Acquired Taste Cultural Feasts list"
@@ -391,7 +391,7 @@ export default function App() {
       ----------------------------------------------------------------- */}
       <div className="hidden md:flex justify-center items-center py-12 space-x-8">
       
-        {/* Dashboard Screenshot (Updated to use asset ID) */}
+        {/* Dashboard Screenshot */}
         <motion.img
           src={ASSET_IDS.screenshotDashboard}
           alt="Acquired Taste Dashboard showing home dashboard"
@@ -404,7 +404,7 @@ export default function App() {
           transition={{ duration: 0.5, delay: 0.1 }}
         />
         
-        {/* Explore Screenshot (Updated to use asset ID) */}
+        {/* Explore Screenshot */}
         <motion.img
           src={ASSET_IDS.screenshotExplore}
           alt="Acquired Taste Explore Swipe card for new dishes"
@@ -417,7 +417,7 @@ export default function App() {
           transition={{ duration: 0.5, delay: 0.2 }}
         />
         
-        {/* Passport Screenshot (Updated to use asset ID) */}
+        {/* Passport Screenshot */}
         <motion.img
           src={ASSET_IDS.screenshotPassport}
           alt="Acquired Taste Cultural Feasts list"
