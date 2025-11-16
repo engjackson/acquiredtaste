@@ -1,8 +1,7 @@
 'use client';
-import { useState, useEffect } from "react"; // Added useEffect here
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, Globe, Goal, Utensils } from "lucide-react";
-
 
 // --- CDN Loading Strategy for Supabase ---
 // We define a window global type definition for type safety inside this self-contained file.
@@ -72,14 +71,15 @@ const WHITE_RING = '#FFFFFF'; // Used for the centered screenshot border
 // --- SUPABASE CONFIGURATION ---
 const supabaseUrl = 'https://yiccjijuhnyjmfihawcc.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpY2NqaWp1aG55am1maWhhd2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5MTEwODMsImV4cCI6MjA3NzQ4NzA4M30.OqwVK_tgSq7qPRc-VqziSh9JIgOg6M_xmB2xExUVgd8';
-const WAITLIST_TABLE_NAME = 'waitlist'; // Default table name
+// UPDATED TABLE NAME TO MATCH THE POLICY YOU SHOWED (public.signups)
+const WAITLIST_TABLE_NAME = 'signups'; 
 
 
 export default function Home() {
- const [email, setEmail] = useState("");
- const [firstName, setFirstName] = useState("");
- const [submitted, setSubmitted] = useState(false);
- const [submissionError, setSubmissionError] = useState(''); // State for errors
+const [email, setEmail] = useState("");
+const [firstName, setFirstName] = useState("");
+const [submitted, setSubmitted] = useState(false);
+const [submissionError, setSubmissionError] = useState(''); // State for errors
 
   // Use the custom hook to manage Supabase client state
   const { supabaseClient, loading: isLoadingSupabase, error: supabaseLoadError } = useSupabaseClient(
@@ -93,6 +93,8 @@ export default function Home() {
       setSubmissionError(supabaseLoadError);
     }
   }, [supabaseLoadError]);
+
+
 
 // --- SEO and Title Management ---
 useEffect(() => {
