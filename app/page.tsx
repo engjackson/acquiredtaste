@@ -393,7 +393,7 @@ export default function App() {
       
         {/* Dashboard Screenshot */}
         <motion.img
-          src={ASSET_IDS.screenshotDashboard}
+          src="/img/screenshot-dashboard.png"
           alt="Acquired Taste Dashboard showing home dashboard"
           // Simple sizing and transition effect
           className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
@@ -406,7 +406,7 @@ export default function App() {
         
         {/* Explore Screenshot */}
         <motion.img
-          src={ASSET_IDS.screenshotExplore}
+          src="/img/screenshot-explore.png"
           alt="Acquired Taste Explore Swipe card for new dishes"
           // Simple sizing and transition effect, border to highlight focus
           className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
@@ -419,7 +419,7 @@ export default function App() {
         
         {/* Passport Screenshot */}
         <motion.img
-          src={ASSET_IDS.screenshotPassport}
+          src="/img/screenshot-passport.png"
           alt="Acquired Taste Cultural Feasts list"
           // Simple sizing and transition effect
           className="w-64 h-auto rounded-3xl shadow-2xl transition duration-500 hover:scale-[1.05]"
