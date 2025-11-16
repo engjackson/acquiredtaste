@@ -69,10 +69,30 @@ const BG_COLOR = '#F9F4EC';     // Warm Sand (Page Background)
 const TEXT_COLOR = '#2E2E2E';   // Deep Charcoal (Main Text, H1/H2)
 const WHITE_RING = '#FFFFFF'; // Used for the centered screenshot border
 
+// --- SUPABASE CONFIGURATION ---
+const supabaseUrl = 'https://yiccjijuhnyjmfihawcc.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpY2NqaWp1aG55am1maWhhd2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5MTEwODMsImV4cCI6MjA3NzQ4NzA4M30.OqwVK_tgSq7qPRc-VqziSh9JIgOg6M_xmB2xExUVgd8';
+const WAITLIST_TABLE_NAME = 'waitlist'; // Default table name
+
+
 export default function Home() {
-const [email, setEmail] = useState("");
-const [firstName, setFirstName] = useState("");
-const [submitted, setSubmitted] = useState(false);
+ const [email, setEmail] = useState("");
+ const [firstName, setFirstName] = useState("");
+ const [submitted, setSubmitted] = useState(false);
+ const [submissionError, setSubmissionError] = useState(''); // State for errors
+
+  // Use the custom hook to manage Supabase client state
+  const { supabaseClient, loading: isLoadingSupabase, error: supabaseLoadError } = useSupabaseClient(
+    supabaseUrl,
+    supabaseAnonKey
+  );
+  
+  // Set submission error if the library fails to load
+  useEffect(() => {
+    if (supabaseLoadError) {
+      setSubmissionError(supabaseLoadError);
+    }
+  }, [supabaseLoadError]);
 
 // --- SEO and Title Management ---
 useEffect(() => {
