@@ -229,7 +229,7 @@ export default function App() {
       
         {/* LOGO IMAGE */}
         <img
-          src={ASSET_IDS.logo}
+          src="/img/acquiredtasteuni.png"
           alt="Acquired Taste Logo"
           className="max-w-xs md:max-w-md mx-auto mb-6 h-auto"
         />
@@ -350,7 +350,7 @@ export default function App() {
       
         {/* Mobile Screenshot 1: Dashboard */}
         <motion.img
-          src={ASSET_IDS.screenshotDashboard}
+          src="/img/screenshot-dashboard.png"
           alt="Acquired Taste Dashboard showing home dashboard"
           className="w-64 h-auto rounded-3xl shadow-xl border-4"
           style={{ borderColor: ACCENT_COLOR }}
@@ -362,7 +362,7 @@ export default function App() {
         
         {/* Mobile Screenshot 2: Swipe/Explore (Center/Hero) */}
         <motion.img
-          src={ASSET_IDS.screenshotExplore}
+          src="/img/screenshot-explore.png"
           alt="Acquired Taste Explore Swipe card for new dishes"
           className="w-64 h-auto rounded-3xl shadow-xl border-4"
           style={{ borderColor: WHITE_RING, outline: `4px solid ${PRIMARY_COLOR}` }}
@@ -374,7 +374,7 @@ export default function App() {
         
         {/* Mobile Screenshot 3: Feasts/Holidays (Passport) */}
         <motion.img
-          src={ASSET_IDS.screenshotPassport}
+          src="/img/screenshot-passport.png"
           alt="Acquired Taste Cultural Feasts list"
           className="w-64 h-auto rounded-3xl shadow-xl border-4"
           style={{ borderColor: ACCENT_COLOR }}
