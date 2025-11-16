@@ -2,7 +2,64 @@
 import { useState, useEffect } from "react"; // Added useEffect here
 import { motion } from "framer-motion";
 import { CheckCircle, Globe, Goal, Utensils } from "lucide-react";
-// Removed import for database client as it is not available in this environment
+
+
+// --- CDN Loading Strategy for Supabase ---
+// We define a window global type definition for type safety inside this self-contained file.
+declare global {
+  interface Window {
+    supabase?: any;
+  }
+}
+
+// --- Supabase Client Initialization Hook ---
+// This hook ensures the library is loaded via CDN script tag before the app attempts to use it.
+const useSupabaseClient = (url: string, anonKey: string) => {
+  const [supabaseClient, setSupabaseClient] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check if the script is already loaded
+    if (window.supabase) {
+      setSupabaseClient(window.supabase.createClient(url, anonKey));
+      setLoading(false);
+      return;
+    }
+
+    // Load the Supabase library via CDN script tag
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.2/dist/umd/supabase.min.js';
+    script.async = true;
+
+    const onLoad = () => {
+      if (window.supabase && window.supabase.createClient) {
+        setSupabaseClient(window.supabase.createClient(url, anonKey));
+        setLoading(false);
+      } else {
+        setError("Supabase library loaded, but client creation failed.");
+        setLoading(false);
+      }
+    };
+
+    const onError = () => {
+      setError("Failed to load Supabase library from CDN.");
+      setLoading(false);
+    };
+
+    script.onload = onLoad;
+    script.onerror = onError;
+    document.head.appendChild(script);
+
+    return () => {
+      // Cleanup: remove the script tag if the component unmounts
+      document.head.removeChild(script);
+    };
+  }, [url, anonKey]); // Re-run if URL or Key changes (though static here)
+
+  return { supabaseClient, loading, error };
+};
+
 
 // --- COLOR PALETTE DEFINITION ---
 const PRIMARY_COLOR = '#FF7A00'; // Spiced Orange (Buttons, Primary Links)
