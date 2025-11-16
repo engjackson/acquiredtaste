@@ -1,18 +1,46 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 
-// 1. Define the structure of the global 'supabase' object
+// --- 1. SUPABASE TYPES ---
 interface SupabaseGlobal {
-  // We specify that 'createClient' has the same type as the one imported from the package
   createClient: typeof createClient;
 }
 
-// 2. Augment the global Window interface to include the new property
+// --- 2. MIXPANEL TYPES (Minimal definitions for methods used) ---
+interface MixpanelPeople {
+    set: (properties: Record<string, any>) => void;
+}
+interface Mixpanel {
+    track: (eventName: string, properties: Record<string, any>) => void;
+    identify: (userId: string) => void;
+    people: MixpanelPeople;
+}
+
+// --- 3. GOOGLE ANALYTICS (GA4) TYPES ---
+// The universal function used to send data
+type GTagFunction = (
+    command: 'config' | 'event' | string, 
+    targetId: string | string, 
+    params?: Record<string, any>
+) => void;
+
+// --- 4. META PIXEL (FBQ) TYPES ---
+// The function used for tracking Facebook/Meta Pixel events
+type FBQFunction = (
+    command: 'track' | 'init' | 'set' | string, 
+    eventName: string, 
+    params?: Record<string, any>
+) => void;
+
+
+// --- GLOBAL WINDOW AUGMENTATION ---
 declare global {
   interface Window {
-    // The property 'supabase' is optional (may not be loaded yet) and should use the type defined above.
     supabase?: SupabaseGlobal;
+    mixpanel?: Mixpanel;
+    gtag?: GTagFunction;
+    fbq?: FBQFunction;
   }
 }
 
-// This export is necessary to ensure TypeScript treats this as a module augmentation file
+// Ensures TypeScript treats this as a module augmentation file
 export {};
